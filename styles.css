@@ -472,3 +472,78 @@ footer{background:#010408;border-top-color:rgba(230,184,105,.20)}
     opacity:.48 !important;
   }
 }
+
+
+/* V14 — CLEAN EARTH REPLACEMENT
+   Uses a clean NASA Earth-at-night source; no generated webpage/text is baked in. */
+.premium-earth{
+  right:-7vw !important;
+  top:-7% !important;
+  width:min(61vw,1080px) !important;
+  height:88% !important;
+  opacity:1 !important;
+  overflow:visible !important;
+  background:transparent !important;
+
+  -webkit-mask-image:radial-gradient(
+    ellipse 78% 76% at 62% 42%,
+    #000 0%,
+    #000 58%,
+    rgba(0,0,0,.92) 67%,
+    rgba(0,0,0,.55) 79%,
+    transparent 96%
+  ) !important;
+  mask-image:radial-gradient(
+    ellipse 78% 76% at 62% 42%,
+    #000 0%,
+    #000 58%,
+    rgba(0,0,0,.92) 67%,
+    rgba(0,0,0,.55) 79%,
+    transparent 96%
+  ) !important;
+}
+
+.premium-earth:before{
+  background:
+    linear-gradient(90deg,
+      #02070c 0%,
+      rgba(2,7,12,.94) 7%,
+      rgba(2,7,12,.58) 18%,
+      rgba(2,7,12,.12) 34%,
+      transparent 48%),
+    linear-gradient(180deg,
+      transparent 0%,
+      transparent 68%,
+      rgba(2,7,12,.25) 79%,
+      #02070c 100%) !important;
+}
+
+.premium-earth:after{
+  background:
+    radial-gradient(ellipse at 67% 41%,
+      transparent 0%,
+      transparent 58%,
+      rgba(2,7,12,.08) 70%,
+      rgba(2,7,12,.55) 88%,
+      #02070c 100%) !important;
+}
+
+.premium-earth img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:66% 63% !important;
+  opacity:.98 !important;
+  filter:saturate(.88) contrast(1.12) brightness(.88) !important;
+}
+
+/* Old Earth labels are deliberately disabled. */
+.earth-copy{display:none !important;}
+
+@media(max-width:900px){
+  .premium-earth{
+    right:-360px !important;
+    width:850px !important;
+    opacity:.48 !important;
+  }
+}
