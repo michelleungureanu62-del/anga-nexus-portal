@@ -745,3 +745,55 @@ footer{background:#010408;border-top-color:rgba(230,184,105,.20)}
 
 /* Hide any old decorative Earth labels. */
 .earth-copy{display:none !important;}
+
+
+/* V17 — NABXATM TYPOGRAPHY ONLY
+   Space Grotesk = display/headings
+   DM Sans = body/UI
+   No layout, Earth, color, or functionality changes. */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+html, body,
+p, a, button, input, select, textarea, label, code,
+nav, .btn, .lookup, .field, .alloc, footer,
+.feature-copy p, .premium-feature-copy p {
+  font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+.hero h1, .panel h2, .card h3, .card strong,
+.brand span, .feature-copy b, .premium-feature-copy b,
+.stats strong, .income strong {
+  font-family:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif !important;
+}
+
+/* Preserve the huge premium hero scale while using NABXATM's font language. */
+.hero h1{
+  font-weight:500 !important;
+  letter-spacing:-.055em !important;
+  line-height:.89 !important;
+}
+.hero h1 em{
+  font-family:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif !important;
+  font-style:normal !important;
+  font-weight:500 !important;
+}
+.panel h2{
+  font-weight:500 !important;
+  letter-spacing:-.035em !important;
+}
+.brand span{
+  font-weight:600 !important;
+  letter-spacing:.16em !important;
+}
+.brand small{
+  font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif !important;
+  font-weight:500 !important;
+}
+.premium-feature-copy b, .feature-copy b{
+  font-weight:600 !important;
+  letter-spacing:.035em !important;
+}
+.btn, nav a{
+  font-weight:600 !important;
+}
