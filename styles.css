@@ -273,3 +273,55 @@ footer{background:#010408;border-top-color:rgba(230,184,105,.20)}
  .features article.premium-feature{grid-template-columns:64px 1fr;padding:14px}
  .premium-feature-icon{padding-right:10px}.premium-feature-icon svg{width:44px;height:44px}
 }
+
+
+/* V11 — NEXUS signature modules: richer metallic linework, glass depth, precision framing */
+.features{gap:22px}
+.features article.premium-feature{
+ min-height:154px;grid-template-columns:112px 1fr;gap:25px;padding:24px 28px;
+ border:1px solid rgba(231,181,94,.48);border-radius:2px;overflow:hidden;
+ background:
+   radial-gradient(240px 150px at 7% 50%,rgba(229,168,69,.075),transparent 60%),
+   radial-gradient(360px 180px at 100% 0%,rgba(35,78,108,.11),transparent 70%),
+   linear-gradient(120deg,rgba(9,17,24,.97),rgba(2,7,11,.985));
+ box-shadow:inset 0 1px rgba(255,238,198,.055),inset 0 -1px rgba(0,0,0,.75),0 22px 55px rgba(0,0,0,.26)
+}
+.features article.premium-feature:before{
+ width:58px;height:1px;background:linear-gradient(90deg,#f4cb7b,#a26b26);
+ box-shadow:0 0 14px rgba(240,184,89,.55)
+}
+.features article.premium-feature:after{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(115deg,rgba(255,229,174,.025),transparent 26%,transparent 75%,rgba(255,213,135,.018));
+}
+.premium-feature-icon{
+ position:relative;height:102px;padding-right:25px;color:#e9b45d;
+ border-right:1px solid rgba(235,184,95,.62);
+ filter:none
+}
+.premium-feature-icon:before{
+ content:"";position:absolute;left:50%;top:50%;width:82px;height:82px;transform:translate(-63%,-50%);
+ border-radius:50%;background:radial-gradient(circle,rgba(240,174,67,.13) 0%,rgba(240,174,67,.045) 36%,transparent 70%);
+ box-shadow:0 0 34px rgba(229,160,54,.055)
+}
+.premium-feature-icon:after{
+ content:"";position:absolute;right:-1px;top:9%;height:28%;width:1px;
+ background:linear-gradient(#ffe0a0,#c78931);box-shadow:0 0 8px rgba(238,179,83,.55)
+}
+.premium-feature-icon svg{position:relative;width:76px;height:76px;overflow:visible}
+.premium-feature-icon .icon-back{stroke-width:2.25;opacity:.96;vector-effect:non-scaling-stroke}
+.premium-feature-icon .icon-hi{stroke-width:1.1;opacity:.42;vector-effect:non-scaling-stroke}
+.premium-feature-copy b{
+ font-size:15px;line-height:1.2;letter-spacing:.07em;
+ background:linear-gradient(180deg,#ffe5ad 0%,#e8b45f 54%,#b87827 100%);
+ -webkit-background-clip:text;background-clip:text;color:transparent;
+ text-shadow:0 0 18px rgba(231,169,68,.08)
+}
+.premium-feature-copy p{margin-top:10px;color:#91a0ad;font-size:11.5px;line-height:1.75;max-width:310px}
+.features article.premium-feature:hover{
+ transform:translateY(-2px);border-color:rgba(246,202,126,.72);
+ box-shadow:inset 0 1px rgba(255,238,198,.07),0 28px 65px rgba(0,0,0,.34),0 0 30px rgba(215,157,62,.055)
+}
+.features article.premium-feature:hover .premium-feature-icon{color:#f3c676}
+@media(max-width:1100px){.features article.premium-feature{grid-template-columns:92px 1fr;padding:21px}.premium-feature-icon{padding-right:18px}.premium-feature-icon svg{width:65px;height:65px}}
+@media(max-width:550px){.features article.premium-feature{grid-template-columns:76px 1fr;min-height:132px}.premium-feature-icon{height:86px;padding-right:13px}.premium-feature-icon svg{width:56px;height:56px}}
