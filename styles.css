@@ -90,3 +90,100 @@ nav a{transition:.2s}nav a:hover{color:var(--gold2)}
 footer{padding:35px 6vw;border-top:1px solid var(--line);color:#6d7884;font-size:9px;letter-spacing:.18em;display:flex;justify-content:space-between}
 @media(max-width:800px){nav{display:none}.features,.grid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.hero{min-height:650px}}
 @media(max-width:550px){header{padding:0 4vw}.hero{padding:92px 5vw 70px}.hero h1{letter-spacing:-.03em}.panel{margin:0 3vw 38px;padding:25px}.features,.grid,.form{grid-template-columns:1fr}.lookup{flex-direction:column}.full{grid-column:auto}.panel h2{font-size:32px}}
+
+
+/* V6 — CINEMATIC NEXUS MASTER VISUAL SYSTEM */
+body{
+ background:
+   radial-gradient(circle at 80% 10%,rgba(31,73,111,.28),transparent 28%),
+   radial-gradient(circle at 50% 75%,rgba(213,158,74,.06),transparent 30%),
+   linear-gradient(180deg,#02070d 0%,#03070b 48%,#010306 100%);
+ background-attachment:fixed;
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:-3;
+ background-image:
+  linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.009) 1px,transparent 1px);
+ background-size:80px 80px;
+ mask-image:linear-gradient(to bottom,rgba(0,0,0,.28),transparent 70%);
+}
+header{
+ height:88px;border-bottom:1px solid rgba(233,190,113,.24);
+ background:linear-gradient(180deg,rgba(2,7,13,.94),rgba(2,7,13,.76));
+ box-shadow:0 10px 50px rgba(0,0,0,.28)
+}
+.hero{
+ min-height:790px;
+ background:
+  linear-gradient(90deg,rgba(1,5,10,.97) 0%,rgba(2,7,13,.84) 38%,rgba(2,7,13,.24) 70%,rgba(2,7,13,.60) 100%),
+  linear-gradient(180deg,transparent 65%,#02070c 100%),
+  url("assets/nexus-cinematic-bg.png") center/cover no-repeat;
+ border-bottom:1px solid rgba(233,190,113,.18);
+}
+.hero:before{content:none}
+.hero:after{
+ content:"PEOPLE   ·   PLANET   ·   PROSPERITY";
+ position:absolute;right:6vw;bottom:46px;
+ font-size:9px;letter-spacing:.36em;color:rgba(239,207,151,.72);
+}
+.hero>span{font-size:10px;letter-spacing:.48em;color:#e4b666}
+.hero h1{
+ max-width:940px;font-size:clamp(62px,7.5vw,112px);line-height:.88;
+ text-shadow:0 12px 55px #000,0 0 32px rgba(233,187,108,.08)
+}
+.hero h1 em{background:linear-gradient(180deg,#fff1cc,#d59c48);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:17px;color:#bdc7d0;max-width:720px;text-shadow:0 2px 18px #000}
+.btn{border-color:rgba(237,190,109,.72);box-shadow:inset 0 0 0 1px rgba(255,255,255,.03),0 0 26px rgba(217,173,99,.10)}
+.panel{
+ overflow:hidden;
+ background:
+  radial-gradient(circle at 88% 0%,rgba(38,75,108,.14),transparent 31%),
+  linear-gradient(145deg,rgba(7,14,22,.96),rgba(2,7,12,.98));
+ border-color:rgba(231,187,110,.26);
+ box-shadow:0 35px 100px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.025)
+}
+.panel:after{
+ content:"";position:absolute;right:-100px;top:-150px;width:480px;height:480px;border-radius:50%;
+ border:1px solid rgba(221,176,99,.055);box-shadow:0 0 100px rgba(24,70,110,.08);pointer-events:none
+}
+.panel h2{font-size:clamp(39px,4.4vw,64px);line-height:1.02}
+.features article,.stats article,.card,.progress,.income{
+ background:
+  linear-gradient(135deg,rgba(13,22,32,.88),rgba(3,8,13,.94));
+ border-color:rgba(232,188,111,.24);
+ box-shadow:inset 0 1px rgba(255,255,255,.025),0 12px 35px rgba(0,0,0,.16);
+ position:relative;overflow:hidden
+}
+.features article:before,.card:before{
+ content:"";position:absolute;left:0;top:0;width:46px;height:1px;background:#e4b465;
+ box-shadow:0 0 12px rgba(232,185,101,.7)
+}
+.features article:hover,.card:hover{
+ border-color:rgba(241,202,132,.55);
+ box-shadow:0 18px 55px rgba(0,0,0,.32),0 0 24px rgba(215,164,82,.06)
+}
+.card .icon{
+ width:52px;height:52px;display:grid;place-items:center;border:1px solid rgba(232,188,111,.32);
+ border-radius:50%;background:radial-gradient(circle,rgba(222,170,84,.10),transparent 70%);
+ color:#e7bd78;filter:none;box-shadow:0 0 28px rgba(220,168,80,.06)
+}
+.card h3{font-size:21px}.card strong{font-size:30px}
+.lookup input,.field input,.field select,.field textarea,.alloc input{
+ background:rgba(1,5,9,.84);border-color:rgba(231,187,110,.25)
+}
+.modal{background:rgba(0,3,7,.88)}
+.box{
+ background:
+  radial-gradient(circle at 90% 0%,rgba(32,73,109,.18),transparent 35%),
+  linear-gradient(145deg,#09131d,#02070c);
+ border-color:rgba(235,190,111,.38)
+}
+footer{
+ background:#010408;border-top-color:rgba(231,187,110,.22);
+ color:#77838f;min-height:90px;align-items:center
+}
+@media(max-width:800px){
+ .hero{background-position:58% center;min-height:720px}
+ .hero:after{display:none}
+}
