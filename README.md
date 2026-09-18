@@ -3,7 +3,7 @@
 Live Stellar public-address lookup for ANGA issued by:
 GBXMW62NDMYWVMNJ3CGHNM72SWG33LXOVLPL5WHNA57O3UGGCWEDDXRD
 
-Includes automatic Tier 1–10 detection, reward entitlements, allocation controls, free-form country/region/city, mining selection and multiplier, illustrative revenue scenarios, and BUY ANGA buttons.
+Includes automatic Tier 1–10 detection, reward entitlements, allocation controls, free-form country/region/city, mining selection and multiplier, revenue scenarios, and BUY ANGA buttons.
 
 V1 configuration persistence: browser localStorage keyed by public Stellar address. This means choices do not yet follow the user to another device. Add a server-side database/API in V2 before relying on saved configurations operationally.
 
