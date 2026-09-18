@@ -547,3 +547,100 @@ footer{background:#010408;border-top-color:rgba(230,184,105,.20)}
     opacity:.48 !important;
   }
 }
+
+
+/* V15 — USER EARTH / SEAMLESS HERO INTEGRATION */
+.premium-earth{
+  position:absolute !important;
+  z-index:-1 !important;
+  right:-3.5vw !important;
+  top:-5% !important;
+  width:min(61vw,1120px) !important;
+  height:82% !important;
+  overflow:hidden !important;
+  opacity:1 !important;
+  pointer-events:none !important;
+  background:transparent !important;
+
+  /* Fade all four edges so the image has no visible rectangular boundary. */
+  -webkit-mask-image:radial-gradient(
+    ellipse 82% 80% at 61% 43%,
+    #000 0%,
+    #000 54%,
+    rgba(0,0,0,.96) 62%,
+    rgba(0,0,0,.72) 73%,
+    rgba(0,0,0,.30) 84%,
+    transparent 97%
+  ) !important;
+  mask-image:radial-gradient(
+    ellipse 82% 80% at 61% 43%,
+    #000 0%,
+    #000 54%,
+    rgba(0,0,0,.96) 62%,
+    rgba(0,0,0,.72) 73%,
+    rgba(0,0,0,.30) 84%,
+    transparent 97%
+  ) !important;
+  -webkit-mask-repeat:no-repeat !important;
+  mask-repeat:no-repeat !important;
+}
+
+.premium-earth img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:52% 48% !important;
+  opacity:.97 !important;
+  filter:saturate(.91) contrast(1.04) brightness(.83) !important;
+}
+
+/* Dark-blue overlays match the image edges to the site's exact hero atmosphere. */
+.premium-earth:before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:2 !important;
+  pointer-events:none !important;
+  background:
+    linear-gradient(90deg,
+      #02070c 0%,
+      rgba(2,7,12,.94) 5%,
+      rgba(2,7,12,.62) 14%,
+      rgba(2,7,12,.18) 27%,
+      transparent 43%),
+    linear-gradient(180deg,
+      rgba(2,7,12,.22) 0%,
+      transparent 15%,
+      transparent 62%,
+      rgba(2,7,12,.18) 73%,
+      rgba(2,7,12,.70) 89%,
+      #02070c 100%) !important;
+}
+
+.premium-earth:after{
+  content:"" !important;
+  position:absolute !important;
+  inset:-1px !important;
+  z-index:3 !important;
+  pointer-events:none !important;
+  background:
+    radial-gradient(ellipse 75% 72% at 60% 43%,
+      transparent 0%,
+      transparent 58%,
+      rgba(2,7,12,.08) 68%,
+      rgba(2,7,12,.36) 82%,
+      rgba(2,7,12,.88) 100%) !important;
+}
+
+/* Never show any old decorative copy around the Earth. */
+.earth-copy{display:none !important;}
+
+@media(max-width:900px){
+  .premium-earth{
+    width:880px !important;
+    right:-390px !important;
+    top:-2% !important;
+    opacity:.52 !important;
+  }
+}
