@@ -392,3 +392,83 @@ footer{background:#010408;border-top-color:rgba(230,184,105,.20)}
 .features article.premium-feature:hover .premium-feature-icon svg{transform:translateY(-1px);transition:transform .35s ease}
 @media(max-width:1100px){.features article.premium-feature{grid-template-columns:104px 1fr;padding:22px}.premium-feature-icon{padding-right:20px}.premium-feature-icon svg{width:72px;height:72px}}
 @media(max-width:550px){.features article.premium-feature{grid-template-columns:78px 1fr;min-height:138px;padding:18px 15px;gap:15px}.premium-feature-icon{height:90px;padding-right:12px}.premium-feature-icon svg{width:60px;height:60px}.premium-feature-copy b{font-size:13px}}
+
+
+/* V13 — EARTH FIX ONLY */
+.premium-earth{
+  position:absolute !important;
+  z-index:-1 !important;
+  right:-5.5vw !important;
+  top:-3.5% !important;
+  width:min(58vw,980px) !important;
+  height:76% !important;
+  overflow:visible !important;
+  pointer-events:none !important;
+  opacity:.96 !important;
+
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, rgba(0,0,0,.16) 7%, #000 25%, #000 100%),
+    linear-gradient(to bottom, #000 0%, #000 63%, rgba(0,0,0,.82) 73%, rgba(0,0,0,.30) 88%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, rgba(0,0,0,.16) 7%, #000 25%, #000 100%),
+    linear-gradient(to bottom, #000 0%, #000 63%, rgba(0,0,0,.82) 73%, rgba(0,0,0,.30) 88%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.premium-earth:before{
+  content:"" !important;
+  position:absolute !important;
+  inset:-2px !important;
+  z-index:2 !important;
+  pointer-events:none !important;
+  background:
+    linear-gradient(90deg,
+      #02070c 0%,
+      rgba(2,7,12,.96) 4%,
+      rgba(2,7,12,.70) 13%,
+      rgba(2,7,12,.18) 27%,
+      transparent 42%),
+    linear-gradient(180deg,
+      transparent 0%,
+      transparent 61%,
+      rgba(2,7,12,.08) 69%,
+      rgba(2,7,12,.48) 82%,
+      #02070c 100%) !important;
+}
+
+.premium-earth:after{
+  content:"" !important;
+  position:absolute !important;
+  inset:-5% -4% -8% -8% !important;
+  z-index:3 !important;
+  pointer-events:none !important;
+  background:radial-gradient(
+    ellipse at 64% 43%,
+    transparent 0%,
+    transparent 55%,
+    rgba(2,7,12,.10) 68%,
+    rgba(2,7,12,.58) 86%,
+    #02070c 100%
+  ) !important;
+}
+
+.premium-earth img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:58% 39% !important;
+  opacity:.94 !important;
+  filter:saturate(.90) contrast(1.06) brightness(.94) !important;
+  -webkit-mask-image:none !important;
+  mask-image:none !important;
+}
+
+@media(max-width:900px){
+  .premium-earth{
+    right:-300px !important;
+    width:800px !important;
+    opacity:.48 !important;
+  }
+}
