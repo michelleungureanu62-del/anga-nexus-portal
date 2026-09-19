@@ -3,9 +3,9 @@ const C=window.ANGA_CONFIG,$=s=>document.querySelector(s),fmt=n=>new Intl.Number
 
   if(r.id==='houses'){
     const imgs={
-      Coastal:'assets/rewards/houses/houses-coastal.png',
-      Modern:'assets/rewards/houses/houses-modern.png',
-      Mountain:'assets/rewards/houses/houses-mountain.png'
+      Coastal:'assets/rewards/houses/houses-coastal.webp',
+      Modern:'assets/rewards/houses/houses-modern.webp',
+      Mountain:'assets/rewards/houses/houses-mountain.webp'
     };
     let allocations=Array.isArray(o.allocations)&&o.allocations.length
       ? o.allocations
@@ -24,7 +24,7 @@ const C=window.ANGA_CONFIG,$=s=>document.querySelector(s),fmt=n=>new Intl.Number
       <div class="house-total-line"><span>HOUSE ALLOCATIONS</span><strong>${fmt(q)} AVAILABLE</strong></div>
       <p class="house-intro">Split your NEXUS Houses across different designs, destinations and uses. Add as many allocations as you need.</p>
       <div class="house-master-gallery">
-        <img src="assets/rewards/houses/houses-overview.png" alt="NEXUS Houses — Coastal, Modern and Mountain designs">
+        <img src="assets/rewards/houses/houses-overview.webp" alt="NEXUS Houses — Coastal, Modern and Mountain designs">
         <div><b>COASTAL</b><b>MODERN</b><b>MOUNTAIN</b></div>
       </div>
       <div class="house-allocation-summary">
@@ -129,11 +129,30 @@ const C=window.ANGA_CONFIG,$=s=>document.querySelector(s),fmt=n=>new Intl.Number
   }
 
 
+  const premiumGalleries={
+    farms:{folder:'farms',overview:'farms-overview.webp',label:'FARM',styles:{Broadacre:'farms-broadacre.webp',Ranch:'farms-ranch.webp','Smart Farm':'farms-smart.webp'}},
+    resorts:{folder:'resorts',overview:'resorts-overview.webp',label:'RESORT',styles:{Tropical:'resorts-tropical.webp',Alpine:'resorts-alpine.webp',Urban:'resorts-urban.webp'}},
+    islands:{folder:'islands',overview:'islands-overview.webp',label:'ISLAND',styles:{Private:'islands-private.webp',Developed:'islands-developed.webp',Eco:'islands-eco.webp'}},
+    smart:{folder:'smart',overview:'smart-overview.webp',label:'SMART BUILDING',styles:{Waterfront:'smart-waterfront.webp',Connected:'smart-connected.webp','Eco Tower':'smart-eco.webp'}}
+  };
+  if(premiumGalleries[r.id]){
+    const g=premiumGalleries[r.id], base=`assets/rewards/${g.folder}/`, imgs=Object.fromEntries(Object.entries(g.styles).map(([k,v])=>[k,base+v])), first=Object.keys(imgs)[0];
+    let allocations=Array.isArray(o.allocations)&&o.allocations.length?o.allocations:[{style:o.style||first,quantity:Object.values(o.alloc||{}).reduce((a,b)=>a+Math.max(0,Number(b||0)),0),country:o.country||'',region:o.region||'',city:o.city||'',use:r.modes[2]||r.modes[1]||r.modes[0],instructions:o.instructions||''}];
+    $('#body').innerHTML=`<span>${r.icon} NEXUS REWARD MANAGEMENT</span><h2>${r.name}</h2><div class="house-total-line"><span>${g.label} ALLOCATIONS</span><strong>${fmt(q)} AVAILABLE</strong></div><p class="house-intro">Split your ${r.name} across different designs, destinations and uses. Add as many allocations as you need.</p><div class="house-master-gallery"><img src="${base+g.overview}" alt="${r.name} overview"><div>${Object.keys(imgs).map(x=>`<b>${x.toUpperCase()}</b>`).join('')}</div></div><div class="house-allocation-summary"><div><small>ALLOCATED</small><b id="houseAllocated">0</b></div><div><small>REMAINING</small><b id="houseRemaining">${fmt(q)}</b></div><div><small>ALLOCATIONS</small><b id="houseAllocationCount">0</b></div></div><div class="house-progress"><i id="houseProgress"></i></div><div id="houseAllocations"></div><button type="button" id="addHouseAllocation" class="btn ghost house-add">+ ADD ${g.label} ALLOCATION</button><div class=estimate><small>MONTHLY REVENUE</small><b id=est>$0 – $0+ / month</b><p>Based on working and NEXUS Managed quantities across all allocations.</p></div><p id="houseError" class="house-error"></p><button id=saveR class="btn save">SAVE ${g.label} CONFIGURATION</button>`;
+    $('#modal').classList.remove('hidden'); const holder=$('#houseAllocations'); const escAttr=v=>esc(String(v??''));
+    function card(a,i){let style=imgs[a.style]?a.style:first;return `<article class="house-allocation-card" data-i="${i}"><div class="house-allocation-head"><div><small>${g.label} ALLOCATION</small><h3>Allocation ${String(i+1).padStart(2,'0')}</h3></div><div class="house-allocation-badge">${style.toUpperCase()}</div>${allocations.length>1?'<button type="button" class="remove-house-allocation">REMOVE</button>':''}</div><div class="house-configurator"><div class="house-visual-column"><div class="house-allocation-photo"><img src="${imgs[style]}" alt="${style} ${r.name}"></div><div class="house-style-title"><small>01</small><div><b>SELECT DESIGN</b><span>Choose the style for this allocation.</span></div></div><div class="house-style-switch">${Object.keys(imgs).map(x=>`<button type="button" data-style="${x}" class="${x===style?'active':''}"><img src="${imgs[x]}" alt=""><span>${x.toUpperCase()}</span></button>`).join('')}</div></div><div class="house-control-column"><section class="house-config-section"><div class="house-section-label"><small>02</small><div><b>ALLOCATION</b><span>Set quantity and intended use.</span></div></div><div class="house-fields"><div class="field"><label>QUANTITY</label><input class="ha-qty" type="number" min="0" max="${q}" step="1" value="${Math.max(0,Number(a.quantity||0))}"></div><div class="field"><label>USE</label><select class="ha-use">${r.modes.map(x=>`<option ${a.use===x?'selected':''}>${x}</option>`).join('')}</select></div></div></section><section class="house-config-section"><div class="house-section-label"><small>03</small><div><b>DESTINATION</b><span>Direct this allocation anywhere you choose.</span></div></div><div class="house-fields"><div class="field"><label>COUNTRY</label><input class="ha-country" value="${escAttr(a.country)}" placeholder="Any country"></div><div class="field"><label>STATE / REGION</label><input class="ha-region" value="${escAttr(a.region)}" placeholder="State / region"></div><div class="field full"><label>CITY</label><input class="ha-city" value="${escAttr(a.city)}" placeholder="Any city"></div><div class="field full"><label>DESTINATION / INSTRUCTIONS</label><textarea class="ha-instructions" placeholder="Optional instructions">${escAttr(a.instructions)}</textarea></div></div></section></div></div></article>`}
+    function render(){holder.innerHTML=allocations.map(card).join('');holder.querySelectorAll('.house-allocation-card').forEach((el,i)=>{el.querySelectorAll('[data-style]').forEach(btn=>btn.onclick=()=>{allocations[i].style=btn.dataset.style;el.querySelector('.house-allocation-photo img').src=imgs[btn.dataset.style];el.querySelector('.house-allocation-badge').textContent=btn.dataset.style.toUpperCase();el.querySelectorAll('[data-style]').forEach(x=>x.classList.toggle('active',x===btn))});let bind=(sel,key,num=false)=>{let x=el.querySelector(sel);x.oninput=()=>{allocations[i][key]=num?Math.max(0,Math.floor(Number(x.value||0))):x.value;calc()};x.onchange=x.oninput};bind('.ha-qty','quantity',true);bind('.ha-use','use');bind('.ha-country','country');bind('.ha-region','region');bind('.ha-city','city');bind('.ha-instructions','instructions');let rem=el.querySelector('.remove-house-allocation');if(rem)rem.onclick=()=>{allocations.splice(i,1);render();calc()}});$('#houseAllocationCount').textContent=allocations.length;calc()}
+    function calc(){let total=allocations.reduce((s,a)=>s+Math.max(0,Number(a.quantity||0)),0),working=allocations.reduce((s,a)=>s+(a.use!==r.modes[0]?Math.max(0,Number(a.quantity||0)):0),0),remaining=Math.max(0,q-total);$('#houseAllocated').textContent=fmt(total);$('#houseRemaining').textContent=fmt(remaining);$('#houseAllocationCount').textContent=allocations.length;$('#houseProgress').style.width=(q?Math.min(100,total/q*100):0)+'%';$('#est').textContent=`${usd(working*r.annualLow/12)} – ${usd(working*r.annualHigh/12)}+ / month`;let over=total>q;$('#houseError').textContent=over?`Reduce allocations by ${fmt(total-q)}.`:'';$('#saveR').disabled=over}
+    $('#addHouseAllocation').onclick=()=>{allocations.push({style:first,quantity:0,country:'',region:'',city:'',use:r.modes[2]||r.modes[1]||r.modes[0],instructions:''});render();setTimeout(()=>holder.lastElementChild?.scrollIntoView({behavior:'smooth',block:'nearest'}),30)};
+    $('#saveR').onclick=()=>{let total=allocations.reduce((s,a)=>s+Math.max(0,Number(a.quantity||0)),0);if(total>q)return;conf[r.id]={allocations:allocations.map(a=>({...a,quantity:Math.max(0,Number(a.quantity||0))}))};save();$('#modal').classList.add('hidden');rewards()};render();return;
+  }
+
+
   if(r.id==='commercial'){
     const imgs={
-      Office:'assets/rewards/commercial/commercial-office.png',
-      Retail:'assets/rewards/commercial/commercial-retail.png',
-      Industrial:'assets/rewards/commercial/commercial-industrial.png'
+      Office:'assets/rewards/commercial/commercial-office.webp',
+      Retail:'assets/rewards/commercial/commercial-retail.webp',
+      Industrial:'assets/rewards/commercial/commercial-industrial.webp'
     };
     let allocations=Array.isArray(o.allocations)&&o.allocations.length
       ? o.allocations
