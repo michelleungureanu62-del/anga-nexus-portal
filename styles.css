@@ -886,3 +886,9 @@ h1, h2, h3, h4, h5, h6,
 #body>.estimate{margin-top:18px!important;padding:20px 22px!important;background:linear-gradient(135deg,rgba(171,120,47,.09),rgba(3,9,14,.72));border-color:rgba(218,175,92,.28)!important}
 @media(max-width:820px){.house-configurator{grid-template-columns:1fr}.house-visual-column{border-right:0;border-bottom:1px solid rgba(218,175,92,.14)}.house-control-column,.house-visual-column{padding:20px}.house-allocation-head{padding:18px 20px}.house-allocation-head h3{font-size:23px}.house-allocation-badge{display:none}.house-master-gallery{aspect-ratio:auto!important}.house-master-gallery>img{height:auto!important}.house-allocation-summary{grid-template-columns:repeat(3,1fr)!important}.house-allocation-summary>div{padding:13px 10px}.house-allocation-summary b{font-size:16px}.house-style-switch{grid-template-columns:repeat(3,1fr)!important}}
 @media(max-width:520px){.house-fields{grid-template-columns:1fr!important}.house-style-switch{gap:5px!important}.house-style-switch button span{font-size:7px;left:6px}.house-allocation-summary small{font-size:7px}.house-allocation-summary b{font-size:14px}}
+
+/* Premium single-image reward showcase */
+.reward-single-hero{margin:18px 0 24px;border:1px solid rgba(213,166,72,.42);background:#050b10;overflow:hidden;aspect-ratio:16/7;position:relative}
+.reward-single-hero:after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 55px rgba(2,10,16,.28);pointer-events:none}
+.reward-single-hero img{width:100%;height:100%;display:block;object-fit:cover;object-position:center}
+@media(max-width:720px){.reward-single-hero{aspect-ratio:16/9}}
