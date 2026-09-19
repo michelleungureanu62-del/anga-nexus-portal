@@ -851,3 +851,38 @@ h1, h2, h3, h4, h5, h6,
 .house-add{width:100%;margin:18px 0 8px}
 .house-error{min-height:18px;color:#d5a04a;font-size:12px}
 @media(max-width:760px){.house-allocation-card{grid-template-columns:1fr}.house-allocation-photo{min-height:0;aspect-ratio:16/9}.house-fields{grid-template-columns:1fr}.house-allocation-summary{grid-template-columns:1fr}.house-master-gallery{aspect-ratio:16/7}.house-master-gallery div{left:12px;bottom:12px}.house-master-gallery b{padding:6px 8px;font-size:8px}}
+
+/* V24 — Premium NEXUS Houses configurator */
+.house-master-gallery{aspect-ratio:auto!important;overflow:visible!important;background:#02070c;margin:24px 0!important}
+.house-master-gallery>img{width:100%!important;height:auto!important;object-fit:contain!important;object-position:center!important;filter:saturate(.96) contrast(1.02)!important}
+.house-master-gallery:after{background:linear-gradient(0deg,rgba(2,7,12,.32),transparent 25%)!important}
+.house-master-gallery>div{display:none!important}
+.house-total-line{margin-top:24px!important;padding:18px 0!important}
+.house-total-line strong{font-size:21px!important}
+.house-intro{font-size:15px;line-height:1.65;margin-bottom:18px!important}
+.house-allocation-summary{margin-top:0;border-color:rgba(218,175,92,.28);background:rgba(218,175,92,.28)}
+.house-allocation-summary>div{padding:18px 20px;background:linear-gradient(180deg,#071019,#040b11)}
+.house-allocation-summary b{font-size:22px}
+.house-progress{height:3px;margin:12px 0 26px}
+#houseAllocations{gap:28px}
+.house-allocation-card{display:block!important;border:1px solid rgba(218,175,92,.34)!important;background:linear-gradient(145deg,#07111a 0%,#03090e 72%)!important;overflow:hidden;box-shadow:0 22px 60px rgba(0,0,0,.28)}
+.house-allocation-head{display:flex;align-items:center;gap:18px;padding:22px 26px;border-bottom:1px solid rgba(218,175,92,.18);background:linear-gradient(90deg,rgba(191,139,61,.08),transparent 42%)}
+.house-allocation-head>div:first-child{margin-right:auto}.house-allocation-head small{display:block;font:600 9px "DM Sans",sans-serif;letter-spacing:.22em;color:#a87938}.house-allocation-head h3{margin:5px 0 0;font:500 27px "Space Grotesk",sans-serif;letter-spacing:-.03em;color:#f1eadf}
+.house-allocation-badge{padding:8px 12px;border:1px solid rgba(225,180,98,.3);font:600 8px "DM Sans",sans-serif;letter-spacing:.18em;color:#e9c47c;background:rgba(218,175,92,.06)}
+.remove-house-allocation{padding:8px 0 8px 10px!important}
+.house-configurator{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr)}
+.house-visual-column{padding:26px;border-right:1px solid rgba(218,175,92,.14)}
+.house-control-column{padding:26px}
+.house-allocation-photo{aspect-ratio:16/9!important;border:1px solid rgba(218,175,92,.22);background:#02070c;overflow:hidden;box-shadow:0 16px 36px rgba(0,0,0,.28)}
+.house-allocation-photo>img{width:100%;height:100%;object-fit:cover;object-position:center;transition:.35s ease}
+.house-allocation-photo:after{display:none!important}
+.house-style-title,.house-section-label{display:flex;align-items:flex-start;gap:12px;margin:20px 0 12px}.house-style-title small,.house-section-label small{font:500 10px "DM Sans",sans-serif;color:#c5954d;letter-spacing:.12em;padding-top:2px}.house-style-title b,.house-section-label b{display:block;font:600 10px "DM Sans",sans-serif;letter-spacing:.18em;color:#e9c47c}.house-style-title span,.house-section-label span{display:block;margin-top:5px;color:#7f91a1;font-size:11px;line-height:1.45}
+.house-style-switch{position:static!important;display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:8px!important}
+.house-style-switch button{position:relative;padding:0!important;aspect-ratio:16/10;overflow:hidden;border:1px solid rgba(233,191,108,.18)!important;background:#02070c!important}
+.house-style-switch button img{width:100%;height:100%;object-fit:cover;opacity:.56;transition:.25s ease}.house-style-switch button:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(2,7,12,.9),transparent 65%)}.house-style-switch button span{position:absolute;z-index:2;left:10px;bottom:8px;font:600 8px "DM Sans",sans-serif;letter-spacing:.14em;color:#aeb8c1}.house-style-switch button.active{border-color:#d8aa57!important;box-shadow:0 0 0 1px rgba(216,170,87,.16),0 10px 24px rgba(0,0,0,.25)}.house-style-switch button.active img{opacity:.95}.house-style-switch button.active span{color:#f0cb84}
+.house-config-section{padding:0 0 24px;margin-bottom:22px;border-bottom:1px solid rgba(218,175,92,.14)}.house-config-section:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}.house-config-section .house-section-label{margin-top:0}
+.house-fields{gap:14px!important}.house-fields label{letter-spacing:.14em}.house-fields input,.house-fields select,.house-fields textarea{background:rgba(1,6,10,.72)!important;border-color:rgba(218,175,92,.2)!important;transition:border-color .2s,box-shadow .2s}.house-fields input:focus,.house-fields select:focus,.house-fields textarea:focus{border-color:rgba(230,183,104,.58)!important;box-shadow:0 0 0 2px rgba(230,183,104,.06);outline:none}.house-fields textarea{min-height:96px!important}
+.house-add{padding:16px!important;margin-top:24px!important;border-style:dashed!important;background:rgba(218,175,92,.035)!important}
+#body>.estimate{margin-top:18px!important;padding:20px 22px!important;background:linear-gradient(135deg,rgba(171,120,47,.09),rgba(3,9,14,.72));border-color:rgba(218,175,92,.28)!important}
+@media(max-width:820px){.house-configurator{grid-template-columns:1fr}.house-visual-column{border-right:0;border-bottom:1px solid rgba(218,175,92,.14)}.house-control-column,.house-visual-column{padding:20px}.house-allocation-head{padding:18px 20px}.house-allocation-head h3{font-size:23px}.house-allocation-badge{display:none}.house-master-gallery{aspect-ratio:auto!important}.house-master-gallery>img{height:auto!important}.house-allocation-summary{grid-template-columns:repeat(3,1fr)!important}.house-allocation-summary>div{padding:13px 10px}.house-allocation-summary b{font-size:16px}.house-style-switch{grid-template-columns:repeat(3,1fr)!important}}
+@media(max-width:520px){.house-fields{grid-template-columns:1fr!important}.house-style-switch{gap:5px!important}.house-style-switch button span{font-size:7px;left:6px}.house-allocation-summary small{font-size:7px}.house-allocation-summary b{font-size:14px}}

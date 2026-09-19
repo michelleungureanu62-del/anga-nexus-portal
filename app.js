@@ -46,21 +46,30 @@ const C=window.ANGA_CONFIG,$=s=>document.querySelector(s),fmt=n=>new Intl.Number
     function card(a,i){
       let style=a.style||'Coastal';
       return `<article class="house-allocation-card" data-i="${i}">
-        <div class="house-allocation-photo">
-          <img src="${imgs[style]||imgs.Coastal}" alt="${style} NEXUS House">
-          <div class="house-style-switch">
-            ${Object.keys(imgs).map(s=>`<button type="button" data-style="${s}" class="${s===style?'active':''}">${s.toUpperCase()}</button>`).join('')}
-          </div>
+        <div class="house-allocation-head">
+          <div><small>HOUSE ALLOCATION</small><h3>Allocation ${String(i+1).padStart(2,'0')}</h3></div>
+          <div class="house-allocation-badge">${style.toUpperCase()}</div>
+          ${allocations.length>1?'<button type="button" class="remove-house-allocation">REMOVE</button>':''}
         </div>
-        <div class="house-allocation-content">
-          <div class="house-allocation-top"><div><small>HOUSE ALLOCATION</small><h3>Allocation ${String(i+1).padStart(2,'0')}</h3></div>${allocations.length>1?'<button type="button" class="remove-house-allocation">REMOVE</button>':''}</div>
-          <div class="house-fields">
-            <div class="field"><label>QUANTITY</label><input class="ha-qty" type="number" min="0" max="${q}" step="1" value="${Math.max(0,Number(a.quantity||0))}"></div>
-            <div class="field"><label>USE</label><select class="ha-use">${['Personal','NEXUS Managed','Rental / Working'].map(x=>`<option ${a.use===x?'selected':''}>${x}</option>`).join('')}</select></div>
-            <div class="field"><label>COUNTRY</label><input class="ha-country" value="${escAttr(a.country)}" placeholder="Any country"></div>
-            <div class="field"><label>STATE / REGION</label><input class="ha-region" value="${escAttr(a.region)}" placeholder="State / region"></div>
-            <div class="field"><label>CITY</label><input class="ha-city" value="${escAttr(a.city)}" placeholder="Any city"></div>
-            <div class="field full"><label>DESTINATION / INSTRUCTIONS</label><textarea class="ha-instructions" placeholder="Optional instructions">${escAttr(a.instructions)}</textarea></div>
+        <div class="house-configurator">
+          <div class="house-visual-column">
+            <div class="house-allocation-photo"><img src="${imgs[style]||imgs.Coastal}" alt="${style} NEXUS House"></div>
+            <div class="house-style-title"><small>01</small><div><b>SELECT DESIGN</b><span>Choose the architectural style for this allocation.</span></div></div>
+            <div class="house-style-switch">
+              ${Object.keys(imgs).map(s=>`<button type="button" data-style="${s}" class="${s===style?'active':''}"><img src="${imgs[s]}" alt=""><span>${s.toUpperCase()}</span></button>`).join('')}
+            </div>
+          </div>
+          <div class="house-control-column">
+            <section class="house-config-section"><div class="house-section-label"><small>02</small><div><b>ALLOCATION</b><span>Set quantity and intended use.</span></div></div><div class="house-fields">
+              <div class="field"><label>QUANTITY</label><input class="ha-qty" type="number" min="0" max="${q}" step="1" value="${Math.max(0,Number(a.quantity||0))}"></div>
+              <div class="field"><label>USE</label><select class="ha-use">${['Personal','NEXUS Managed','Rental / Working'].map(x=>`<option ${a.use===x?'selected':''}>${x}</option>`).join('')}</select></div>
+            </div></section>
+            <section class="house-config-section"><div class="house-section-label"><small>03</small><div><b>DESTINATION</b><span>Direct this allocation anywhere you choose.</span></div></div><div class="house-fields">
+              <div class="field"><label>COUNTRY</label><input class="ha-country" value="${escAttr(a.country)}" placeholder="Any country"></div>
+              <div class="field"><label>STATE / REGION</label><input class="ha-region" value="${escAttr(a.region)}" placeholder="State / region"></div>
+              <div class="field full"><label>CITY</label><input class="ha-city" value="${escAttr(a.city)}" placeholder="Any city"></div>
+              <div class="field full"><label>DESTINATION / INSTRUCTIONS</label><textarea class="ha-instructions" placeholder="Optional instructions">${escAttr(a.instructions)}</textarea></div>
+            </div></section>
           </div>
         </div>
       </article>`;
@@ -72,6 +81,7 @@ const C=window.ANGA_CONFIG,$=s=>document.querySelector(s),fmt=n=>new Intl.Number
         el.querySelectorAll('[data-style]').forEach(btn=>btn.onclick=()=>{
           allocations[i].style=btn.dataset.style;
           el.querySelector('.house-allocation-photo img').src=imgs[btn.dataset.style];
+          el.querySelector('.house-allocation-badge').textContent=btn.dataset.style.toUpperCase();
           el.querySelectorAll('[data-style]').forEach(x=>x.classList.toggle('active',x===btn));
         });
         let bind=(sel,key,num=false)=>{
