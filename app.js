@@ -24,7 +24,7 @@ const C=window.ANGA_CONFIG,$=s=>document.querySelector(s),fmt=n=>new Intl.Number
       <div class="house-total-line"><span>HOUSE ALLOCATIONS</span><strong>${fmt(q)} AVAILABLE</strong></div>
       <p class="house-intro">Split your NEXUS Houses across different designs, destinations and uses. Add as many allocations as you need.</p>
       <div class="house-master-gallery">
-        <img src="${imgs.Coastal}" alt="NEXUS Houses">
+        <img src="assets/rewards/houses/houses-overview.png" alt="NEXUS Houses — Coastal, Modern and Mountain designs">
         <div><b>COASTAL</b><b>MODERN</b><b>MOUNTAIN</b></div>
       </div>
       <div class="house-allocation-summary">
