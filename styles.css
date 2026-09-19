@@ -817,3 +817,181 @@ h1, h2, h3, h4, h5, h6,
 .selected-style{padding:5px 18px 14px;text-align:right;font:500 9px/1.4 "DM Sans",sans-serif;letter-spacing:.18em;color:#7f91a1}
 .selected-style b{color:#e9bd72;margin-left:8px}
 @media(max-width:650px){#body>span,#body>h2,#body>p,#body>.alloc,#body>#remain,#body>.form,#body>.estimate,#body>.save{margin-left:20px;margin-right:20px}.reward-hero{height:300px}.reward-thumbs{gap:6px;padding:8px}.reward-thumb{height:80px}.reward-thumb span{font-size:8px;left:8px;bottom:7px}}
+
+
+/* V19 — NEXUS HOUSES MULTI-ALLOCATION WORKSPACE */
+.house-allocation-workspace{
+  margin-top:28px;
+  padding-top:28px;
+  border-top:1px solid rgba(211,166,83,.24);
+}
+.house-allocation-workspace[hidden]{display:none!important}
+.house-allocation-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:28px;
+  align-items:end;
+  margin-bottom:18px;
+}
+.house-allocation-head h3{
+  margin:6px 0 7px;
+  font-family:"Space Grotesk",system-ui,sans-serif;
+  font-size:clamp(22px,2vw,32px);
+  font-weight:500;
+  letter-spacing:-.035em;
+}
+.house-allocation-head p{
+  margin:0;
+  max-width:650px;
+  color:var(--muted,#91a2b3);
+}
+.allocation-meter{
+  min-width:165px;
+  text-align:right;
+  padding-left:24px;
+  border-left:1px solid rgba(211,166,83,.28);
+}
+.allocation-meter span{
+  display:block;
+  color:#d7ae62;
+  font-size:10px;
+  letter-spacing:.22em;
+  font-weight:700;
+}
+.allocation-meter strong{
+  display:block;
+  margin-top:2px;
+  font-family:"Space Grotesk",system-ui,sans-serif;
+  font-size:34px;
+  font-weight:500;
+  color:#f4e8d0;
+}
+.allocation-meter small{color:#8293a5}
+.allocation-progress{
+  height:2px;
+  background:rgba(255,255,255,.07);
+  overflow:hidden;
+  margin-bottom:20px;
+}
+.allocation-progress i{
+  display:block;
+  width:0;
+  height:100%;
+  background:linear-gradient(90deg,#8f682b,#efc879);
+  transition:width .25s ease;
+}
+.house-allocation-list{
+  display:grid;
+  gap:14px;
+}
+.house-allocation-card{
+  position:relative;
+  display:grid;
+  grid-template-columns:180px minmax(0,1fr);
+  overflow:hidden;
+  border:1px solid rgba(211,166,83,.22);
+  background:linear-gradient(120deg,rgba(8,17,25,.98),rgba(3,9,14,.98));
+}
+.house-allocation-image{
+  min-height:205px;
+  background:#06101a center/cover no-repeat;
+  position:relative;
+}
+.house-allocation-image:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,transparent 55%,rgba(4,10,15,.85));
+}
+.house-allocation-body{padding:20px 22px 18px}
+.house-allocation-title{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:center;
+  margin-bottom:14px;
+}
+.house-allocation-title strong{
+  font-family:"Space Grotesk",system-ui,sans-serif;
+  font-size:17px;
+  font-weight:600;
+  color:#f0d39b;
+}
+.house-allocation-remove{
+  border:0;
+  background:none;
+  color:#8293a5;
+  font:600 10px "DM Sans",sans-serif;
+  letter-spacing:.15em;
+  cursor:pointer;
+}
+.house-allocation-remove:hover{color:#e3bd74}
+.house-allocation-fields{
+  display:grid;
+  grid-template-columns:1.05fr .65fr 1fr 1fr;
+  gap:10px;
+}
+.house-allocation-fields label{
+  display:grid;
+  gap:6px;
+  color:#8fa0b1;
+  font:600 9px "DM Sans",sans-serif;
+  letter-spacing:.14em;
+}
+.house-allocation-fields input,
+.house-allocation-fields select{
+  width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  border:1px solid rgba(211,166,83,.20);
+  background:#050d14;
+  color:#e8edf1;
+  padding:11px 10px;
+  font:500 12px "DM Sans",sans-serif;
+  outline:none;
+}
+.house-allocation-fields input:focus,
+.house-allocation-fields select:focus{
+  border-color:rgba(226,181,98,.68);
+}
+.house-allocation-use{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-top:10px;
+}
+.house-use-btn{
+  border:1px solid rgba(211,166,83,.18);
+  background:rgba(255,255,255,.015);
+  color:#94a3b1;
+  padding:9px 8px;
+  font:700 9px "DM Sans",sans-serif;
+  letter-spacing:.13em;
+  cursor:pointer;
+}
+.house-use-btn.active{
+  color:#f1cf8d;
+  border-color:rgba(226,181,98,.65);
+  background:rgba(201,150,65,.08);
+}
+.allocation-add{
+  margin-top:15px;
+  width:100%;
+}
+.allocation-message{
+  min-height:18px;
+  margin:10px 0 0;
+  color:#c8a25e;
+  font-size:11px;
+}
+@media(max-width:800px){
+  .house-allocation-head{grid-template-columns:1fr}
+  .allocation-meter{text-align:left;border-left:0;border-top:1px solid rgba(211,166,83,.2);padding:14px 0 0}
+  .house-allocation-card{grid-template-columns:1fr}
+  .house-allocation-image{min-height:180px}
+  .house-allocation-image:after{background:linear-gradient(180deg,transparent 65%,rgba(4,10,15,.8))}
+  .house-allocation-fields{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+  .house-allocation-fields{grid-template-columns:1fr}
+}
