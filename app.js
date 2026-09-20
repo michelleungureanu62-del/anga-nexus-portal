@@ -1,5 +1,5 @@
 const C=window.ANGA_CONFIG,$=s=>document.querySelector(s),fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n),usd=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0,notation:n>=1e9?'compact':'standard'}).format(n);$('#buyTop').href=$('#buyHero').href=C.buyUrl;let acct,tier,conf={};const tierFor=b=>C.tiers.slice().reverse().find(t=>b>=t.min)||null,key=()=>`anga:nexus:v32:${acct}`;
-function cloudEnabled(){return !!(C.apiUrl&&/^https:\/\//.test(C.apiUrl))}
+function cloudEnabled(){return !!(C.apiUrl&&(C.apiUrl.startsWith('/')||/^https:\/\//.test(C.apiUrl)))}
 function setSaveState(t,kind=''){let e=document.querySelector('#saveState');if(!e)return;e.textContent=t;e.dataset.kind=kind}
 async function load(){
   let cached={};try{cached=JSON.parse(localStorage.getItem(key())||'{}')}catch{}
