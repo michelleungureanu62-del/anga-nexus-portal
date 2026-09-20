@@ -1,4 +1,10 @@
 const WALLET=/^G[A-Z2-7]{55}$/;
+const MAX_BODY_BYTES=64*1024;
+const WRITE_WINDOW_MS=60*1000,WRITE_LIMIT=30;
+const buckets=globalThis.__nexusRateBuckets||(globalThis.__nexusRateBuckets=new Map());
+function clientIp(req){return String(req.headers['x-forwarded-for']||req.socket?.remoteAddress||'unknown').split(',')[0].trim()}
+function allowWrite(req){const now=Date.now(),ip=clientIp(req),b=buckets.get(ip);if(!b||now-b.start>=WRITE_WINDOW_MS){buckets.set(ip,{start:now,count:1});return true}if(b.count>=WRITE_LIMIT)return false;b.count++;return true}
+function bodyTooLarge(req){const n=Number(req.headers['content-length']||0);if(n>MAX_BODY_BYTES)return true;try{return Buffer.byteLength(JSON.stringify(req.body??{}),'utf8')>MAX_BODY_BYTES}catch{return true}}
 const cors={"Access-Control-Allow-Origin":process.env.NEXUS_ALLOWED_ORIGIN||"*","Access-Control-Allow-Methods":"GET,PUT,OPTIONS","Access-Control-Allow-Headers":"Content-Type"};
 function send(res,status,body){Object.entries(cors).forEach(([k,v])=>res.setHeader(k,v));res.status(status).json(body)}
 export default async function handler(req,res){
@@ -14,6 +20,8 @@ export default async function handler(req,res){
    const rows=await r.json(); if(!rows.length)return send(res,404,{error:'No configuration'}); return send(res,200,rows[0]);
  }
  if(req.method==='PUT'){
+   if(bodyTooLarge(req))return send(res,413,{error:'Configuration payload too large'});
+   if(!allowWrite(req)){res.setHeader('Retry-After','60');return send(res,429,{error:'Too many save requests. Please try again shortly.'});}
    const config=req.body?.config; if(!config||typeof config!=='object'||Array.isArray(config))return send(res,400,{error:'Invalid configuration'});
    const payload={wallet,config,updated_at:new Date().toISOString()};
    const r=await fetch(`${base}/rest/v1/investor_configs?on_conflict=wallet`,{method:'POST',headers:{...h,Prefer:'resolution=merge-duplicates,return=representation'},body:JSON.stringify(payload)});
