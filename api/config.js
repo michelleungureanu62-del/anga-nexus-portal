@@ -8,16 +8,16 @@ export default async function handler(req,res){
  const wallet=String(req.method==='GET'?req.query.wallet:req.body?.wallet||'').toUpperCase();
  if(!WALLET.test(wallet))return send(res,400,{error:'Invalid Stellar public address'});
  const url=`${base}/rest/v1/investor_configs?wallet=eq.${encodeURIComponent(wallet)}`;
- const h={apikey:key,Authorization:`Bearer ${key}`,'Content-Type':'application/json'};
+ const h={apikey:key,'Content-Type':'application/json'};
  if(req.method==='GET'){
-   const r=await fetch(url+'&select=config,updated_at',{headers:h}); if(!r.ok)return send(res,502,{error:'Database read failed'});
+   const r=await fetch(url+'&select=config,updated_at',{headers:h}); if(!r.ok){const detail=await r.text();console.error('Supabase read failed',{status:r.status,detail});return send(res,502,{error:'Database read failed',upstreamStatus:r.status});}
    const rows=await r.json(); if(!rows.length)return send(res,404,{error:'No configuration'}); return send(res,200,rows[0]);
  }
  if(req.method==='PUT'){
    const config=req.body?.config; if(!config||typeof config!=='object'||Array.isArray(config))return send(res,400,{error:'Invalid configuration'});
    const payload={wallet,config,updated_at:new Date().toISOString()};
    const r=await fetch(`${base}/rest/v1/investor_configs?on_conflict=wallet`,{method:'POST',headers:{...h,Prefer:'resolution=merge-duplicates,return=representation'},body:JSON.stringify(payload)});
-   if(!r.ok)return send(res,502,{error:'Database write failed'}); const rows=await r.json(); return send(res,200,rows[0]||payload);
+   if(!r.ok){const detail=await r.text();console.error('Supabase write failed',{status:r.status,detail});return send(res,502,{error:'Database write failed',upstreamStatus:r.status});} const rows=await r.json(); return send(res,200,rows[0]||payload);
  }
  return send(res,405,{error:'Method not allowed'});
 }

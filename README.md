@@ -16,3 +16,7 @@ This V32 stage intentionally implements persistence first, as planned. It does *
 - Cloud configured: configurations load/save through `/api/config`, with local cache fallback.
 - Cloud not configured: portal continues to work locally.
 - Stellar secret keys are never requested or stored.
+
+
+## V32.2 Supabase key compatibility
+This build supports the current Supabase `sb_secret_...` server key format. The key is sent only in the `apikey` header; it is never exposed to the browser. Failed Supabase calls log only the upstream HTTP status and response body in Vercel server logs, never the secret key.
