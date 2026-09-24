@@ -32,3 +32,19 @@ V1.1 adds an ANGA Dividend Center with 10 live ANGA tiers, 11 dividend-credit ca
 4. Existing `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `NEXUS_ALLOWED_ORIGIN` variables remain unchanged.
 
 Dividend entries are internal NEXUS account credits. Asset labels identify the dividend-credit category and do not by themselves represent custody or an on-chain transfer of BTC, ETH, SOL, USDC, XLM, XRP, USDT, GOLD, SILVER, S&P 500, or XDC.
+
+## V1.1.1 — Live dividend ledger update
+- Replaced XDC, USDT, XRP, XLM, GOLD, SILVER and S&P 500 artwork with the supplied investor-facing images.
+- Removed the About Dividend Credits panel from the Dividend Center.
+- Dividend history now expands day-by-day and shows the exact 11 asset amounts credited on each date, plus the tier and ANGA balance captured for that credit.
+- The newest credited day opens automatically.
+- No retroactive rows are generated. Deployment/activation day can be Day 1 by manually invoking the protected `/api/dividends-run` endpoint once after deployment; subsequent runs are scheduled daily at 00:05 UTC.
+
+### Activation order
+1. Run `supabase-dividends-v1.1.sql` once in the existing Supabase project.
+2. Add `CRON_SECRET` as a Production secret in Vercel (long random value) and redeploy.
+3. Confirm the deployment is Ready.
+4. Trigger `/api/dividends-run` once with `Authorization: Bearer <CRON_SECRET>` to create Day 1 immediately, or allow the scheduled daily run to create the first row at 00:05 UTC.
+5. Open an eligible investor wallet in the portal and confirm Dividend Account History shows the new day and all 11 amounts.
+
+The dividend ledger is an internal account ledger; this job records credits and does not send the named underlying assets on-chain.

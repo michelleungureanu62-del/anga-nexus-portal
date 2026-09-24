@@ -34,7 +34,42 @@ function renderDividendGrid(tierIndex){
   g.innerHTML=D.assets.map((a,i)=>{let v=rates[i]*divPeriod;return `<article class="dividend-asset"><div class="dividend-asset-top"><img class="dividend-logo" src="${a.logo}" alt="${a.code}"><div><small>${a.code} / ${divPeriod===1?'DAY':divPeriod+' DAYS'}</small><div class="asset-name">${a.name} Dividend Credits</div></div></div><b>${divFmt(v,a.decimals||0)}</b><em>${divPreviewTier===null?'CURRENT TIER':'TIER '+(tierIndex+1)+' PREVIEW'}</em></article>`}).join('');
 }
 async function loadDividendHistory(){
-  if(!acct||!$('#divHistoryRows'))return;try{const r=await fetch(`${C.apiUrl}/dividends?wallet=${encodeURIComponent(acct)}`);if(!r.ok)throw Error('history');const j=await r.json(),rows=j.history||[];$('#divDaysCredited').textContent=fmt(j.daysCredited||0);$('#divHistoryRows').innerHTML=rows.length?rows.slice(0,30).map(x=>{const assets=Object.entries(x.credits||{}).map(([k,v])=>`${k} ${Number(v).toLocaleString('en-US',{maximumFractionDigits:2})}`).join(' · ');return `<div class="div-history-row"><small>${x.credit_date}</small><b>TIER ${x.tier}</b><div class="div-history-assets">${assets}</div><small class="div-history-status">CREDITED ✓</small></div>`}).join(''):'<div class="div-history-empty">No dividend credits recorded yet. The first automatic daily run will create your account history.</div>'}catch{$('#divDaysCredited').textContent='—';$('#divHistoryRows').innerHTML='<div class="div-history-empty">Dividend ledger is not activated yet. Run the V1.1 Supabase migration and configure the daily job to enable history.</div>'}}
+  if(!acct||!$('#divHistoryRows'))return;
+  try{
+    const r=await fetch(`${C.apiUrl}/dividends?wallet=${encodeURIComponent(acct)}`);
+    if(!r.ok)throw Error('history');
+    const j=await r.json(),rows=j.history||[];
+    $('#divDaysCredited').textContent=fmt(j.daysCredited||0);
+    if(!rows.length){
+      $('#divHistoryRows').innerHTML='<div class="div-history-empty">No dividend credits recorded yet. Your first automatic daily credit will appear here after the daily run.</div>';
+      return;
+    }
+    const assets=C.dividends?.assets||[];
+    $('#divHistoryRows').innerHTML=rows.slice(0,90).map((x,rowIndex)=>{
+      const date=new Date(`${x.credit_date}T00:00:00Z`).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'});
+      const cards=assets.map(a=>{
+        const value=Number((x.credits||{})[a.code]||0);
+        return `<div class="div-history-asset"><img src="${a.logo}" alt="${a.code}"><span><small>${a.code}</small><b>+${divFmt(value,a.decimals||0)}</b></span></div>`;
+      }).join('');
+      return `<article class="div-history-day ${rowIndex===0?'open':''}">
+        <button class="div-history-toggle" type="button" aria-expanded="${rowIndex===0?'true':'false'}">
+          <span><small>DAILY DIVIDEND CREDIT</small><b>${date}</b></span>
+          <span><small>TIER AT CREDIT</small><b>TIER ${x.tier}</b></span>
+          <span><small>ANGA BALANCE</small><b>${fmt(Number(x.anga_balance||0))}</b></span>
+          <strong>CREDITED ✓</strong><i>⌄</i>
+        </button>
+        <div class="div-history-detail"><div class="div-history-asset-grid">${cards}</div></div>
+      </article>`;
+    }).join('');
+    $('#divHistoryRows').querySelectorAll('.div-history-toggle').forEach(btn=>btn.onclick=()=>{
+      const day=btn.closest('.div-history-day'),open=day.classList.toggle('open');
+      btn.setAttribute('aria-expanded',String(open));
+    });
+  }catch{
+    $('#divDaysCredited').textContent='—';
+    $('#divHistoryRows').innerHTML='<div class="div-history-empty">Dividend history is temporarily unavailable.</div>';
+  }
+}
 function renderDividendCenter(){
   if(!C.dividends||!tier||!$('#dividends'))return;
   const idx=tier.tier-1,next=C.tiers[idx+1];
