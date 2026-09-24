@@ -48,3 +48,6 @@ Dividend entries are internal NEXUS account credits. Asset labels identify the d
 5. Open an eligible investor wallet in the portal and confirm Dividend Account History shows the new day and all 11 amounts.
 
 The dividend ledger is an internal account ledger; this job records credits and does not send the named underlying assets on-chain.
+
+## V1.1.2 accumulated dividend totals
+Dividend Center now shows Today, Last 30 Days, and All Time totals per dividend asset, calculated from the investor's stored Supabase dividend ledger. The API paginates ledger rows server-side and still returns the latest 90 daily entries for the expandable history view.

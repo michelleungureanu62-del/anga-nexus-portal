@@ -1,4 +1,4 @@
-const C=window.ANGA_CONFIG,$=s=>document.querySelector(s),fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n),usd=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0,notation:n>=1e9?'compact':'standard'}).format(n);$('#buyTop').href=$('#buyHero').href=C.buyUrl;let acct,tier,conf={},currentBalance=0,divPeriod=1,divPreviewTier=null;const tierFor=b=>C.tiers.slice().reverse().find(t=>b>=t.min)||null,key=()=>`anga:nexus:v32:${acct}`;
+const C=window.ANGA_CONFIG,$=s=>document.querySelector(s),fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n),usd=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0,notation:n>=1e9?'compact':'standard'}).format(n);$('#buyTop').href=$('#buyHero').href=C.buyUrl;let acct,tier,conf={},currentBalance=0,divPeriod=1,divPreviewTier=null,divTotals=null,divTotalPeriod='all';const tierFor=b=>C.tiers.slice().reverse().find(t=>b>=t.min)||null,key=()=>`anga:nexus:v32:${acct}`;
 function cloudEnabled(){return !!(C.apiUrl&&(C.apiUrl.startsWith('/')||/^https:\/\//.test(C.apiUrl)))}
 function setSaveState(t,kind=''){let e=document.querySelector('#saveState');if(!e)return;e.textContent=t;e.dataset.kind=kind}
 async function load(){
@@ -40,6 +40,8 @@ async function loadDividendHistory(){
     if(!r.ok)throw Error('history');
     const j=await r.json(),rows=j.history||[];
     $('#divDaysCredited').textContent=fmt(j.daysCredited||0);
+    $('#divTotalDays').textContent=fmt(j.daysCredited||0);
+    divTotals=j.totals||null; renderDividendTotals();
     if(!rows.length){
       $('#divHistoryRows').innerHTML='<div class="div-history-empty">No dividend credits recorded yet. Your first automatic daily credit will appear here after the daily run.</div>';
       return;
@@ -66,10 +68,17 @@ async function loadDividendHistory(){
       btn.setAttribute('aria-expanded',String(open));
     });
   }catch{
-    $('#divDaysCredited').textContent='—';
+    $('#divDaysCredited').textContent='—';$('#divTotalDays').textContent='—';divTotals=null;renderDividendTotals();
     $('#divHistoryRows').innerHTML='<div class="div-history-empty">Dividend history is temporarily unavailable.</div>';
   }
 }
+function renderDividendTotals(){
+  const g=$('#dividendTotalsGrid');if(!g)return;
+  if(!divTotals){g.innerHTML='<div class="div-history-empty">Accumulated totals are temporarily unavailable.</div>';return}
+  const totals=divTotalPeriod==='1'?divTotals.today:divTotalPeriod==='30'?divTotals.days30:divTotals.allTime,assets=C.dividends?.assets||[];
+  g.innerHTML=assets.map(a=>`<article class="dividend-total-asset"><img src="${a.logo}" alt="${a.code}"><div><small>${a.code}</small><b>${divFmt(Number(totals?.[a.code]||0),a.decimals||0)}</b><span>${divTotalPeriod==='1'?'TODAY':divTotalPeriod==='30'?'LAST 30 DAYS':'ALL TIME'}</span></div></article>`).join('');
+}
+function bindDividendTotalPeriods(){document.querySelectorAll('[data-total-period]').forEach(b=>b.onclick=()=>{divTotalPeriod=b.dataset.totalPeriod;document.querySelectorAll('[data-total-period]').forEach(x=>x.classList.toggle('active',x===b));renderDividendTotals()})}
 function renderDividendCenter(){
   if(!C.dividends||!tier||!$('#dividends'))return;
   const idx=tier.tier-1,next=C.tiers[idx+1];
@@ -78,7 +87,7 @@ function renderDividendCenter(){
   if(next){let needed=Math.max(0,next.min-currentBalance);$('#divNext').textContent=`TIER ${next.tier}`;$('#divNeeded').textContent=`${fmt(needed)} ANGA to ${next.name}`;let pct=Math.max(0,Math.min(100,(currentBalance-tier.min)/(next.min-tier.min)*100));$('#divProgressText').textContent=`${Math.round(pct)}%`;$('#divProgressCaption').textContent=`${fmt(currentBalance)} / ${fmt(next.min)} ANGA`;$('#divProgressBar').style.width=pct+'%'}else{$('#divNext').textContent='MAXIMUM';$('#divNeeded').textContent='Highest dividend tier';$('#divProgressText').textContent='100%';$('#divProgressCaption').textContent='ANGA SOVEREIGN';$('#divProgressBar').style.width='100%'}
   $('#divTierButtons').innerHTML=C.tiers.map((t,i)=>`<button data-div-tier="${i}" class="${i===idx?'current':''}">T${i+1}</button>`).join('');
   $('#divTierButtons').querySelectorAll('button').forEach(b=>b.onclick=()=>previewDividendTier(Number(b.dataset.divTier)));
-  previewDividendTier(idx,true);loadDividendHistory();
+  previewDividendTier(idx,true);bindDividendTotalPeriods();loadDividendHistory();
 }
 function previewDividendTier(idx,actual=false){
   if(!tier)return;divPreviewTier=actual?null:idx;const t=C.tiers[idx],cur=tier.tier-1;
