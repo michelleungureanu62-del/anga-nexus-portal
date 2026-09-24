@@ -51,9 +51,3 @@ The dividend ledger is an internal account ledger; this job records credits and 
 
 ## V1.1.2 accumulated dividend totals
 Dividend Center now shows Today, Last 30 Days, and All Time totals per dividend asset, calculated from the investor's stored Supabase dividend ledger. The API paginates ledger rows server-side and still returns the latest 90 daily entries for the expandable history view.
-
-## V1.1.3 — Universal Reward Allocations
-- Repeatable allocations are now enabled for every NEXUS reward category, including Vehicles, Supercars, Jets, Helicopters, Yachts, Ships, Healing Units/Centres, Energy Systems and Mining Units.
-- Each allocation can have its own quantity, intended use, model/style preference, features, destination and instructions.
-- Allocated / Remaining / Allocation count is shown consistently and additional allocations can be added until the entitlement is used.
-- Existing saved single configurations are migrated into the first allocation when opened; existing multi-allocation categories remain compatible.
