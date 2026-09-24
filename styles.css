@@ -941,3 +941,6 @@ h1, h2, h3, h4, h5, h6,
 .reward-repeat-controls{width:100%;max-width:none}
 .reward-repeat-controls .house-config-section{margin-bottom:18px}
 #addHouseAllocation:disabled{opacity:.45;cursor:not-allowed}
+
+/* V1.1.5 allocation feedback */
+.house-allocation-card.allocation-just-added{outline:2px solid rgba(218,175,92,.85);box-shadow:0 0 0 5px rgba(218,175,92,.10),0 18px 50px rgba(0,0,0,.35);transition:outline-color .3s,box-shadow .3s}

@@ -414,7 +414,18 @@ function dash(b){currentBalance=b;$('#balance').textContent=fmt(b);if(!tier){$('
       });
       calc();
     }
-    $('#addHouseAllocation').onclick=()=>{allocations.push({quantity:0,use:defaultUse,preference:'',features:'',country:'',region:'',city:'',instructions:'',mine:'Gold'});render();setTimeout(()=>holder.lastElementChild?.scrollIntoView({behavior:'smooth',block:'nearest'}),30)};
+    $('#addHouseAllocation').onclick=()=>{
+      const used=allocations.reduce((sum,a)=>sum+Math.max(0,Number(a.quantity||0)),0);
+      const remaining=Math.max(0,q-used);
+      allocations.push({quantity:remaining>0?1:0,use:defaultUse,preference:'',features:'',country:'',region:'',city:'',instructions:'',mine:'Gold'});
+      render();
+      const added=holder.querySelector('.house-allocation-card:last-child');
+      if(added){
+        added.classList.add('allocation-just-added');
+        requestAnimationFrame(()=>added.scrollIntoView({behavior:'smooth',block:'center'}));
+        setTimeout(()=>added.classList.remove('allocation-just-added'),1600);
+      }
+    };
     $('#saveR').onclick=()=>{const total=allocations.reduce((s,a)=>s+Math.max(0,Number(a.quantity||0)),0);if(total>q)return;conf[r.id]={allocations:allocations.map(a=>({...a,quantity:Math.max(0,Number(a.quantity||0))})),status:o.status||'REQUESTED'};save();$('#modal').classList.add('hidden');rewards()};
     render();return;
   }
