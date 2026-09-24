@@ -402,7 +402,8 @@ function dash(b){currentBalance=b;$('#balance').textContent=fmt(b);if(!tier){$('
       $('#houseAllocated').textContent=fmt(total);$('#houseRemaining').textContent=fmt(remaining);$('#houseAllocationCount').textContent=allocations.length;
       $('#houseProgress').style.width=`${q?Math.min(100,total/q*100):0}%`;$('#est').textContent=`${usd(working*r.annualLow/12)} – ${usd(working*r.annualHigh/12)}+ / month`;
       $('#houseError').textContent=total>q?`You have allocated ${fmt(total-q)} more than your available entitlement.`:'';$('#saveR').disabled=total>q;
-      $('#addHouseAllocation').disabled=remaining<=0;
+      // Keep Add Allocation available across all reward categories. The save guard below prevents over-allocation.
+      $('#addHouseAllocation').disabled=false;
     }
     function render(){
       holder.innerHTML=allocations.map(card).join('');
