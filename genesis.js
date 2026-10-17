@@ -20,7 +20,37 @@ $('lookup').onclick=async()=>{const w=$('wallet').value.trim().toUpperCase();if(
 // source for DEX fills that some Horizon effect feeds do not expose as credits.
 // Reconcile by ledger-close timestamp: credits already recorded at that ledger
 // are subtracted from trade receipts to avoid counting the same fill twice.
-async function scan(kind, onRow){
+const ledgerDates=new Map();
+async function recordTime(r,kind){
+  const raw=r.created_at??r.ledger_close_time??r.closed_at;
+  if(raw!=null){
+    const ms=typeof raw==='number' ? (raw>1e12?raw:raw*1000) : Date.parse(raw);
+    if(Number.isFinite(ms))return ms;
+  }
+  // Horizon account trade records can omit created_at. Resolve the
+  // ledger close time instead of rejecting a legitimate executed trade.
+  if(Number.isSafeInteger(Number(r.ledger))&&Number(r.ledger)>0){
+    const ledger=Number(r.ledger);
+    if(!ledgerDates.has(ledger)){
+      const response=await fetch(`https://horizon.stellar.org/ledgers/${ledger}`,{cache:'no-store'});
+      if(!response.ok)throw Error(`Cannot resolve ${kind} ledger ${ledger}: HTTP ${response.status}`);
+      const data=await response.json();
+      const ms=Date.parse(data.closed_at??data.created_at);
+      if(!Number.isFinite(ms))throw Error(`Ledger ${ledger} has no valid close time`);
+      ledgerDates.set(ledger,ms);
+    }
+    return ledgerDates.get(ledger);
+  }
+  if(r.transaction_hash){
+    const response=await fetch(`https://horizon.stellar.org/transactions/${encodeURIComponent(r.transaction_hash)}`,{cache:'no-store'});
+    if(!response.ok)throw Error(`Cannot resolve ${kind} transaction timestamp: HTTP ${response.status}`);
+    const data=await response.json();
+    const ms=Date.parse(data.created_at);
+    if(Number.isFinite(ms))return ms;
+  }
+  throw Error(`Cannot determine ${kind} timestamp; no partial allocation applied`);
+}
+async function scan(kind,onRow){
   let url=`https://horizon.stellar.org/accounts/${w}/${kind}?order=desc&limit=200`;
   let pages=0,finished=false;
   const seen=new Set();
@@ -33,12 +63,11 @@ async function scan(kind, onRow){
     if(!Array.isArray(rows))throw Error(`Invalid Stellar ${kind} response`);
     if(!rows.length)break;
     for(const r of rows){
-      const date=Date.parse(r.created_at);
-      if(!Number.isFinite(date))throw Error(`Invalid ${kind} timestamp`);
+      const date=await recordTime(r,kind);
       if(date<start){finished=true;break;}
       if(date>=end||seen.has(r.id))continue;
       seen.add(r.id);
-      onRow(r);
+      onRow(r,date);
     }
     pages++;
     if(finished||rows.length<200)break;
@@ -53,12 +82,12 @@ const add=(map,key,value)=>{
   if(!Number.isFinite(value)||value<0)throw Error('Invalid ANGA amount in Stellar history');
   if(value>0)map.set(key,(map.get(key)||0)+value);
 };
-await scan('effects',r=>{
+await scan('effects',(r,date)=>{
   if(!['account_credited','trustline_credited'].includes(r.type))return;
   if(r.asset_code!==code||r.asset_issuer!==issuer)return;
-  add(credits,r.created_at,Number(r.amount));
+  add(credits,String(date),Number(r.amount));
 });
-await scan('trades',r=>{
+await scan('trades',(r,date)=>{
   // Horizon trade base_account is the seller of base_amount;
   // counter_account is the seller of counter_amount.
   const baseSeller=r.base_account===w,counterSeller=r.counter_account===w;
@@ -73,7 +102,7 @@ await scan('trades',r=>{
     assetIssuer=r.base_asset_issuer;
     amount=Number(r.base_amount);
   }
-  if(assetCode===code&&assetIssuer===issuer)add(trades,r.created_at,amount);
+  if(assetCode===code&&assetIssuer===issuer)add(trades,String(date),amount);
 });
 let total=0;
 for(const amount of credits.values())total+=amount;
