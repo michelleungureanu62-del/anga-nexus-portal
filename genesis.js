@@ -16,31 +16,71 @@ $('addLocation').onclick=()=>{locations.push(newLocation());render()};
 $('donate').onchange=()=>{$('donateBox').hidden=$('donate').value!=='yes';recalc()};$('donationCount').oninput=recalc;
 function payload(){return{wallet,received,towns,sentinels,promotion:'2026-10-08 through 2026-10-18 UTC',locations,foundation:{contribute:$('donate').value==='yes',towns:$('donate').value==='yes'?Number($('donationCount').value):0},savedAt:new Date().toISOString(),status:'registration preferences'}}
 $('save').onclick=async()=>{if(!recalc())return;const button=$('save');button.disabled=true;$('saveStatus').textContent='Saving preferences to database…';try{const r=await fetch('/api/genesis',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({wallet,preferences:payload()})});const data=await r.json();if(!r.ok)throw Error(data.error||'Save failed');$('saveStatus').textContent='Preferences saved to database. You can return and edit them later.'}catch(e){$('saveStatus').textContent='Could not save preferences: '+e.message}finally{recalc()}};
-$('lookup').onclick=async()=>{const w=$('wallet').value.trim().toUpperCase();if(!/^G[A-Z2-7]{55}$/.test(w)){$('status').textContent='Enter a valid Stellar public address beginning with G.';return}wallet=w;$('lookup').disabled=true;$('status').textContent='Reading Stellar credit history…';$('registration').hidden=true;try{let url=`https://horizon.stellar.org/accounts/${w}/effects?order=desc&limit=200`,total=0,pages=0,done=false,seen=new Set();
-// Account credit effects include incoming transfers, path payments and executed offer trades.
-// Count each on-chain credit once; do not add trades to payments separately.
-while(!done&&pages<1000){
-  const response=await fetch(url);
-  if(!response.ok)throw Error(`Stellar lookup returned ${response.status}`);
-  const data=await response.json(),rows=data._embedded?.records||[];
-  if(!rows.length)break;
-  for(const r of rows){
-    const date=Date.parse(r.created_at);
-    if(!Number.isFinite(date))throw Error('Stellar history contained an invalid timestamp');
-    if(date<start){done=true;break}
-    if(date>=end)continue;
-    if(r.type!=='account_credited'||r.asset_code!==code||r.asset_issuer!==issuer)continue;
-    if(seen.has(r.id))continue;
-    const amount=Number(r.amount);
-    if(!Number.isFinite(amount)||amount<0)throw Error('Stellar history contained an invalid ANGA credit');
-    seen.add(r.id);total+=amount;
+$('lookup').onclick=async()=>{const w=$('wallet').value.trim().toUpperCase();if(!/^G[A-Z2-7]{55}$/.test(w)){$('status').textContent='Enter a valid Stellar public address beginning with G.';return}wallet=w;$('lookup').disabled=true;$('status').textContent='Reading Stellar credit history…';$('registration').hidden=true;try{// Scan both credit effects and executed trades. Trade records provide a second
+// source for DEX fills that some Horizon effect feeds do not expose as credits.
+// Reconcile by ledger-close timestamp: credits already recorded at that ledger
+// are subtracted from trade receipts to avoid counting the same fill twice.
+async function scan(kind, onRow){
+  let url=`https://horizon.stellar.org/accounts/${w}/${kind}?order=desc&limit=200`;
+  let pages=0,finished=false;
+  const seen=new Set();
+  while(!finished){
+    if(pages>=1000)throw Error(`${kind} history exceeds scan limit; no partial allocation applied.`);
+    const response=await fetch(url,{cache:'no-store'});
+    if(!response.ok)throw Error(`Stellar ${kind} lookup returned ${response.status}`);
+    const data=await response.json();
+    const rows=data._embedded?.records;
+    if(!Array.isArray(rows))throw Error(`Invalid Stellar ${kind} response`);
+    if(!rows.length)break;
+    for(const r of rows){
+      const date=Date.parse(r.created_at);
+      if(!Number.isFinite(date))throw Error(`Invalid ${kind} timestamp`);
+      if(date<start){finished=true;break;}
+      if(date>=end||seen.has(r.id))continue;
+      seen.add(r.id);
+      onRow(r);
+    }
+    pages++;
+    if(finished||rows.length<200)break;
+    const next=data._links?.next?.href;
+    if(!next||next===url)throw Error(`Incomplete Stellar ${kind} history`);
+    url=next;
+    $('status').textContent=`Checking Stellar ${kind}… ${pages} pages`;
   }
-  pages++;
-  if(done||rows.length<200)break;
-  url=data._links?.next?.href;
-  if(!url)throw Error('Stellar history pagination is unavailable; no partial allocation was applied.');
-  $('status').textContent=`Reading Stellar credit history… ${pages} pages checked`;
 }
-if(!done&&pages>=1000)throw Error('History exceeds scan limit; no partial allocation was applied. Contact support for review.');
+const credits=new Map(),trades=new Map();
+const add=(map,key,value)=>{
+  if(!Number.isFinite(value)||value<0)throw Error('Invalid ANGA amount in Stellar history');
+  if(value>0)map.set(key,(map.get(key)||0)+value);
+};
+await scan('effects',r=>{
+  if(!['account_credited','trustline_credited'].includes(r.type))return;
+  if(r.asset_code!==code||r.asset_issuer!==issuer)return;
+  add(credits,r.created_at,Number(r.amount));
+});
+await scan('trades',r=>{
+  // Horizon trade base_account is the seller of base_amount;
+  // counter_account is the seller of counter_amount.
+  const baseSeller=r.base_account===w,counterSeller=r.counter_account===w;
+  if(!baseSeller&&!counterSeller)return;
+  let assetCode,assetIssuer,amount;
+  if(baseSeller){
+    assetCode=r.counter_asset_code;
+    assetIssuer=r.counter_asset_issuer;
+    amount=Number(r.counter_amount);
+  }else{
+    assetCode=r.base_asset_code;
+    assetIssuer=r.base_asset_issuer;
+    amount=Number(r.base_amount);
+  }
+  if(assetCode===code&&assetIssuer===issuer)add(trades,r.created_at,amount);
+});
+let total=0;
+for(const amount of credits.values())total+=amount;
+for(const [timestamp,amount] of trades){
+  // A trade credit can also appear in effects; add only the unmatched excess.
+  total+=Math.max(0,amount-(credits.get(timestamp)||0));
+}
+if(!Number.isFinite(total))throw Error('Invalid calculated ANGA total');
 received=total;const tier=tiers.filter(t=>total+1e-8>=t[0]).at(-1);towns=tier?.[1]||0;sentinels=tier?.[2]||0;$('received').textContent=fmt(received);$('towns').textContent=fmt(towns);$('sentinels').textContent=fmt(sentinels);$('status').textContent=`Lookup completed. ${tier?'Qualifying promotion tier: '+fmt(tier[0])+' ANGA.':'No published Genesis promotion tier reached.'}`;locations=[newLocation()];$('donate').value='no';$('donationCount').value=0;$('donateBox').hidden=true;try{const savedResponse=await fetch('/api/genesis?wallet='+encodeURIComponent(wallet));if(!savedResponse.ok&&savedResponse.status!==404)throw Error('Database unavailable');const saved=savedResponse.ok?(await savedResponse.json()).preferences:null;if(saved&&Array.isArray(saved.locations)){locations=saved.locations;nextId=Math.max(1,...locations.map(l=>Number(l.id)||0))+1;$('donate').value=saved.foundation?.contribute?'yes':'no';$('donationCount').value=saved.foundation?.towns||0;$('donateBox').hidden=$('donate').value!=='yes'}}catch(e){$('saveStatus').textContent='Saved preferences could not be loaded: '+e.message} $('registration').hidden=false;render()}catch(e){$('status').textContent='Lookup could not be completed: '+e.message}finally{$('lookup').disabled=false}};
 })();
